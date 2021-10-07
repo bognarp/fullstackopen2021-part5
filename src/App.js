@@ -14,8 +14,14 @@ const App = () => {
 
 	const blogFormRef = useRef();
 
+	const sortedBlogs = (blogs) => {
+		return blogs.sort((objA, objB) => {
+			return objB.likes - objA.likes;
+		});
+	};
+
 	useEffect(() => {
-		blogService.getAll().then((blogs) => setBlogs(blogs));
+		blogService.getAll().then((blogs) => setBlogs(sortedBlogs(blogs)));
 	}, []);
 
 	useEffect(() => {
@@ -53,7 +59,7 @@ const App = () => {
 			blogService.setToken(user.token);
 
 			const blog = await blogService.create(newBlog);
-			setBlogs(blogs.concat(blog));
+			setBlogs(sortedBlogs(blogs.concat(blog)));
 			setNotification({
 				type: 'success',
 				message: `Added new blog: ${blog.title} by ${blog.author}`,
@@ -61,7 +67,7 @@ const App = () => {
 
 			setTimeout(() => {
 				setNotification(null);
-				blogFormRef.current.toggleVisibility()
+				blogFormRef.current.toggleVisibility();
 			}, 3000);
 		} catch (exception) {
 			setNotification({
@@ -72,6 +78,40 @@ const App = () => {
 			setTimeout(() => {
 				setNotification(null);
 			}, 5000);
+		}
+	};
+
+	const handleBlogRemoval = async (blog) => {
+		if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+			try {
+				blogService.setToken(user.token);
+
+				await blogService.remove(blog.id);
+				setBlogs(
+					sortedBlogs(
+						blogs.filter((b) => {
+							return b.id !== blog.id;
+						})
+					)
+				);
+			} catch (exception) {
+				console.log(exception.response.data);
+			}
+		}
+	};
+
+	const handleLike = async (newBlog) => {
+		try {
+			const updatedBlog = await blogService.update(newBlog.id, newBlog);
+			setBlogs(
+				sortedBlogs(
+					blogs.map((blog) => {
+						return blog.id === updatedBlog.id ? updatedBlog : blog;
+					})
+				)
+			);
+		} catch (exception) {
+			console.log(exception.response.data);
 		}
 	};
 
@@ -104,7 +144,13 @@ const App = () => {
 			{createBlogForm()}
 			<h2>Blogs</h2>
 			{blogs.map((blog) => (
-				<Blog key={blog.id} blog={blog} />
+				<Blog
+					key={blog.id}
+					blog={blog}
+					user={user}
+					onLike={handleLike}
+					onRemove={handleBlogRemoval}
+				/>
 			))}
 		</div>
 	);
