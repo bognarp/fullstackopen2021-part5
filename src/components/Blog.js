@@ -35,11 +35,11 @@ const Blog = (props) => {
 
   return (
     <div style={blogStyle}>
-      <div style={visible}>
+      <div style={visible} className="simpleView">
         {blog.title} {blog.author}
         <button onClick={toggleExpansion}>view</button>
       </div>
-      <div style={hidden}>
+      <div style={hidden} className="extendedView">
         <button onClick={toggleExpansion}>hide</button> <br />
         <strong>Title</strong>: {blog.title} <br />
         <strong>Author</strong>: {blog.author} <br />

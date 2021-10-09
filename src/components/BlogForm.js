@@ -33,29 +33,29 @@ const BlogForm = (props) => {
       {props.children}
       <form onSubmit={handleBlogCreation}>
         <div>
-					title
+          title
           <input
+            id="title"
             type="text"
             value={blogTitle}
-            name="Title"
             onChange={handleTitleChange}
           />
         </div>
         <div>
-					author
+          author
           <input
+            id="author"
             type="text"
             value={blogAuthor}
-            name="Author"
             onChange={handleAuthorChange}
           />
         </div>
         <div>
-					url
+          url
           <input
+            id="url"
             type="text"
             value={blogUrl}
-            name="Url"
             onChange={handleUrlChange}
           />
         </div>
