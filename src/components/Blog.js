@@ -45,9 +45,14 @@ const Blog = (props) => {
         <strong>Author</strong>: {blog.author} <br />
         <strong>Url</strong>: {blog.url} <br />
         <strong>Likes</strong>: {blog.likes}{' '}
-        <button onClick={addLike}>like</button> <br />
+        <button id="like-button" onClick={addLike}>
+          like
+        </button>{' '}
+        <br />
         {user.username === blog.user.username ? (
-          <button onClick={handleDelete}>remove</button>
+          <button id="remove-button" onClick={handleDelete}>
+            remove
+          </button>
         ) : (
           <></>
         )}
